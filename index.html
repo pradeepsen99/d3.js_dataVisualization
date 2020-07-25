@@ -79,48 +79,47 @@ async function init() {
     var width = window.screen.width;
     var height = window.screen.height; 
 
-
-    var svg = d3.select("svg")
-            .append("g")
-            .attr("transform", "translate(70,70)");
-
     d3.select("svg")                           
         .attr("width", width)
         .attr("height", height);
     
     d3.csv("police_brut.csv").then(function(data) {
-
-
-        var rects = [];
-
-        var rectGrid = d3.grid()
-            .bands()
-            .size([360, 360])
-            .padding([1, 1]);
-
-
-        d3.select("svg")
+        /*d3.select("svg")
         .append('g')
             .attr("transform", "translate(" + 50 + "," + 50 + ")")
         .selectAll('picture')
             .data(data)
             .enter()
             .append('image')
-                .attr('xlink:href', 
-                    function (d) { 
-                        rects.push(d.url_image)
-                        update();
-                        return d.url_image; 
-                    })
+                .attr('xlink:href', function (d) { return d.url_image; })
                 .attr('width', 50)
                 .attr('height', 50)
                 .attr('x', function(d, i) {return 2*i;})
                 .attr('y', function(d, i) {return 2*i;})
-        
+        */
+        var rects = [];
+
+        var width = 960,
+            height = 500;
+
+        var rectGrid = d3.grid()
+            .bands()
+            .size([360, 360])
+            .padding([1, 1]);
+
+        var svg = d3.select("svg")
+            .attr('width', width)
+            .attr('height', height)
+            .append("g")
+            .attr("transform", "translate(70,70)");
+
+        var tick = setInterval(push, 0);
+
         function update() {
             var rect = svg.selectAll(".rect")
                 .data(rectGrid(rects));
                     rect.enter().append("rect")
+                        .attr('xlink:href', function (d, i) { return data[i].url_image; })
                         .attr("class", "rect")
                         .attr("width", rectGrid.nodeSize()[0])
                         .attr("height", rectGrid.nodeSize()[1])
@@ -136,12 +135,8 @@ async function init() {
                         .remove();
         }
 
-
-
-        //var tick = setInterval(push, 0);
-
-        /*function push() {
-            if (rects.length > 1000) {
+        function push() {
+            if (rects.length > 55) {
                 clearInterval(tick);
             }
             rects.push({});
@@ -149,9 +144,10 @@ async function init() {
         }
 
         function pop() {
-            rects.pop();
-            update();
-        }*/
+        rects.pop();
+        update();
+
+        }
 
     });
 }
