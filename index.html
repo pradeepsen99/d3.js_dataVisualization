@@ -9,7 +9,6 @@
     <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
     <script src="https://d3js.org/d3-request.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
-    <script src="https://d3js.org/queue.v1.min.js"></script>
 
     <style>
     body {
@@ -37,15 +36,6 @@
     #play-button:hover {
       background-color: #696969;
     }    
-
-    .states {
-    fill: #ccc;
-    stroke: #fff;
-    }
-
-    .point, .rect {
-        fill: #222;
-    }
     
     .ticks {
       font-size: 10px;
@@ -81,83 +71,21 @@
       stroke-opacity: 0.5;
       stroke-width: 1.25px;
     }
+    
+    .states {
+        fill: #ccc;
+        stroke: #fff;
+    }
 
     .cities {
         fill: red;
         opacity:0.7;
     }
+
+
     </style>
 </head>
 
 <body>
-<script>
-queue()
-	.defer(d3.json, 'us.json')
-    .defer(d3.json, 'zipcodes.tsv')
-    .defer(d3.csv, 'police_brut.csv')
-    .await(init);
-    
-function init() {
-
-    var width = 960,
-    height = 500;
-
-    var projection = d3.geoAlbersUsa();
-    var path = d3.geoPath()
-        .projection(projection);
-
-    var svg = d3.select("body").append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
-    d3.json("us.json", function(error, us) {
-        svg.append("path")
-            .attr("class", "states")
-            .datum(topojson.feature(us, us.objects.states))
-            .attr("d", path);    
-    });
-
-
-    d3.csv("police_brut.csv", function(data) {
-        var zipcodes = [];
-        var raw_police_data = [];
-
-        for(var i = 0; i < data.length; i++){
-            console.log(data[i].date.includes("2020"))
-            if(data[i].date.includes("/20") === false){
-                continue;
-            }
-            zipcodes.push(data[i].Zipcode)
-        }
-        console.log(raw_police_data);
-        d3.tsv("zipcodes.tsv", function(error, zip) {
-            var actual_zips = [];
-            for(var i = 0; i < zip.length; i++){
-
-                if(zipcodes.includes(zip[i].zip) === true){
-                    actual_zips.push(zip[i]);
-                }
-            }
-
-            svg.selectAll(".pin")
-                .data(actual_zips)
-                .enter()
-                .append("circle")
-                    .attr("r", 5)
-                    .attr("transform", 
-                        function(d) {
-                            return "translate(" + projection([
-                                d.lon,
-                                d.lat
-                            ]) + ")";
-                    })
-        });
-    });
-
-
-
-    
-
-}
-</script>
+    <script src='visualization.js'></script>
 </body>
