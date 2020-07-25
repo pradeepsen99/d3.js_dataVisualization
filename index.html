@@ -2,13 +2,22 @@
 <head>
     <meta charset="utf-8">
     <script src='https://d3js.org/d3.v5.min.js'></script>
-    <script src="https://d3js.org/d3-array.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
     <script src="https://d3js.org/d3-selection.v1.min.js"></script>
     <script src="https://d3js.org/d3-collection.v1.min.js"></script>
     <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
     <script src="https://d3js.org/d3-request.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3js.org/d3-time.v1.min.js"></script>
+    <script src="https://d3js.org/d3-time-format.v2.min.js"></script>
+    <!--d3-drag-->
+    <script src="https://d3js.org/d3-drag.v1.min.js"></script>
+    <!--d3-transitions-->
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-ease.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-timer.v1.min.js"></script>
+    <script src="https://d3js.org/d3-transition.v1.min.js"></script>
 
     <style>
     body {
@@ -87,5 +96,8 @@
 </head>
 
 <body>
+    <div id="vis">
+        <button id="play-button">Play</button>
+      </div>
     <script src='visualization.js'></script>
 </body>
