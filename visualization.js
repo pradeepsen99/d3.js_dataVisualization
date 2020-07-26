@@ -1,8 +1,8 @@
 var width = 1000,
-height = 1000;
+height = 700
 
 var formatDateIntoMonth = d3.timeFormat("%B");
-var formatDate = d3.timeFormat("%b %Y");
+var formatDate = d3.timeFormat("%d %b %Y");
 var parseDate = d3.timeParse("%m/%d/%y");
 var formatSeconds = d3.timeFormat(".%L");
 
@@ -30,7 +30,7 @@ var x = d3.scaleTime()
 
 var slider = svg.append("g")
     .attr("class", "slider")
-    .attr("transform", "translate(" + 10 + "," +-50 + ")");
+    .attr("transform", "translate(" + 10 + "," + -20 + ")");
 
 slider.append("line")
     .attr("class", "track")
@@ -99,8 +99,6 @@ async function init() {
 }
 
 
-
-
 var projection = d3.geoAlbersUsa();
 var path = d3.geoPath()
     .projection(projection);
@@ -142,6 +140,7 @@ function step() {
 
 //This is to get the data in from csv/tsv files
 
+var currentVictm;
 function update_slider(date) {
     // update position and text of label according to slider scale
     handle.attr("cx", x(date));
@@ -152,7 +151,7 @@ function update_slider(date) {
     actual_zips = [];
     zipcodes = [];
     actual_zips = [];
-    console.log(date);
+    //console.log(date);
     var daysFromInput = d3.timeDay.count(date, endDate);
     //console.log(parseDate(police_brut_data[40].date))
     for(var i = 0; i < police_brut_data.length; i++){
@@ -160,16 +159,20 @@ function update_slider(date) {
         if(daysFromCurr < 1){
             continue;
         }
-        console.log((police_brut_data[i].date)+ "  " + daysFromCurr + "    " + daysFromInput);
+        //console.log((police_brut_data[i].date)+ "  " + daysFromCurr + "    " + daysFromInput);
         if((daysFromCurr<daysFromInput)){
             break;
         }
+        currentVictm = police_brut_data[i];
         zipcodes.push(police_brut_data[i].Zipcode)
     }
-    for(var i = 0; i < zip_tsv.length; i++){
-        if(zipcodes.includes(zip_tsv[i].zip) === true){
-            actual_zips.push(zip_tsv[i]);
+    for(var i = 0; i < zipcodes.length; i++){
+        var curr = zip_tsv[zip_tsv.findIndex(x => x.zip === zipcodes[i])]
+        //console.log(curr);
+        if(curr == undefined){
+            continue;
         }
+        actual_zips.push(curr);
     }
 
     svg.selectAll("circle")
@@ -182,7 +185,6 @@ function update_slider(date) {
 
 function drawNodes(zips){
     //console.log(d3.timeDay.count(date, endDate));
-
 
     svg.selectAll(".pin")
         .data(zips)
@@ -205,5 +207,71 @@ function drawNodes(zips){
                 return 1
                 ;
             })
+            .on("mouseover", mouseover )
+            .on("mousemove", mousemove )
+            .on("mouseleave", mouseleave )
 }
 
+//var timer1 = setInterval(test, 4000);
+var counter = 0;
+function test(){
+    tooltip
+      .style("opacity", 1)
+    var name = "<p style='font-size:20px'>" + police_brut_data[counter].Name + "</p>\n";
+    var age = "<p style='font-size:15px'> Age: " + police_brut_data[counter].Age + "</p>\n";
+    var address = "<p style='font-size:20px'>Address of death: " + police_brut_data[counter].Address + "</p>\n";
+    var cause_death = "<p style='font-size:20px'> Cause of death: " + police_brut_data[counter].cause_death + "</p>\n";
+    var url_img = "<img src='" + police_brut_data[counter].url_image + "'onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));' style='height:200px;width:200px;border:none;overflow:hidden;'/>";
+    if(police_brut_data[counter].url_image===""){
+        url_img = "IMG Unavil";
+    }
+    tooltip
+      .html(name + age + address + cause_death + url_img);
+    counter++;
+}
+
+//----------VICTIM INFO---------//
+var tooltip = d3.select("#vis")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+    .style("float","left")
+    .style("position", "absolute")
+    .style("display", "inline-block")
+    .style("margin-left", "70%;")
+
+
+var mouseover = function(d) {
+    //console.log("mouseover");
+    tooltip
+      .style("opacity", 1)
+  }
+
+  var mousemove = function(d, i) {
+    var name = "<p style='font-size:20px'>" + police_brut_data[i].Name + "</p>\n";
+    var age = "<p style='font-size:15px'> Age: " + police_brut_data[i].Age + "</p>\n";
+    var address = "<p style='font-size:20px'>Address of death: " + police_brut_data[i].Address + "</p>\n";
+    var cause_death = "<p style='font-size:20px'> Cause of death: " + police_brut_data[i].cause_death + "</p>\n";
+    var url_img = "<img src='" + police_brut_data[i].url_image + "'onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));' style='height:200px;width:200px;border:none;overflow:hidden;'/>";
+    if(police_brut_data[i].url_image===""){
+        url_img = "IMG Unavil";
+    }
+    tooltip
+      .html(name + age + address + cause_death + url_img);
+      //.style("x", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+      //.style("y", (d3.mouse(this)[1]) + "px")
+  }
+
+  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  var mouseleave = function(d) {
+    //console.log("mouseleave");
+    tooltip
+      .transition()
+      .duration(200)
+      .style("opacity", 1)
+  }
