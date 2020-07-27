@@ -69,6 +69,7 @@ var label = slider.append("text")
     .attr("text-anchor", "middle")
     .text(formatDate(startDate))
     .attr("transform", "translate(0," + (-25) + ")")
+    .attr("color", "white")
 
 
 //----------MAP---------//
@@ -196,8 +197,8 @@ function drawNodes(zips){
                     ]) + ")";
             })
             .attr('fill', function(d, i){
-                if(police_brut_data[i].Race === "White"){
-                    return "green";
+                if(police_brut_data[i].Race === "Black"){
+                    return "blue";
                 }
                 return "red";
             })
@@ -221,11 +222,11 @@ function test(){
       .style("opacity", 1)
     var name = "<p style='font-size:20px'>" + police_brut_data[counter].Name + "</p>\n";
     var age = "<p style='font-size:15px'> Age: " + police_brut_data[counter].Age + "</p>\n";
-    var address = "<p style='font-size:20px'>Address of death: " + police_brut_data[counter].Address + "</p>\n";
-    var cause_death = "<p style='font-size:20px'> Cause of death: " + police_brut_data[counter].cause_death + "</p>\n";
+    var address = "<p style='font-size:15px'>Address of death: " + police_brut_data[counter].Address + "</p>\n";
+    var cause_death = "<p style='font-size:15px'> Cause of death: " + police_brut_data[counter].cause_death + "</p>\n";
     var url_img = "<img src='" + police_brut_data[counter].url_image + "'onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));' style='height:200px;width:200px;border:none;overflow:hidden;'/>";
     if(police_brut_data[counter].url_image===""){
-        url_img = "IMG Unavil";
+        url_img = "<p style='font-size:15px'>**IMG Unavalable**</p>\n";
     }
     tooltip
       .html(name + age + address + cause_death + url_img);
