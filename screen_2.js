@@ -17,7 +17,7 @@ var svg = d3.select("#vis").append("svg")
     .attr("height", height)
     .append('g')
     .attr("transform", "translate(" + 30 + "," + height/10 + ")");;
-
+/*
 //--------SLIDER--------//
 var moving = false;
 var currentValue = 0;
@@ -58,7 +58,6 @@ slider.insert("g", ".track-overlay")
     .attr("x", x)
     .attr("y", 10)
     .attr("text-anchor", "middle")
-    .style("fill", "white")
     .text(function(d) { return formatDateIntoMonth(d); });
 
 var handle = slider.insert("circle", ".track-overlay")
@@ -68,11 +67,10 @@ var handle = slider.insert("circle", ".track-overlay")
 var label = slider.append("text")  
     .attr("class", "label")
     .attr("text-anchor", "middle")
-    .style("fill", "white")
     .text(formatDate(startDate))
     .attr("transform", "translate(0," + (-25) + ")")
     .attr("color", "white")
-
+*/
 
 //----------MAP---------//
 //Modified data vars
@@ -87,6 +85,10 @@ var police_brut_data = [];
 //Projection vars
 var projection = d3.geoAlbersUsa();
 var path = d3.geoPath().projection(projection);
+
+//Map coloring
+var color = d3.scaleLinear().domain([1,50])
+  .range(["white", "red"])
 
 init();
 var temp = 0
@@ -119,22 +121,72 @@ function init() {
             .attr("d", path);    
     });*/
     //New Attempt at map code
-    console.log("HI");
     d3.json("us-states.json").then(function(json) {
-        console.log("HI");
-        svg.selectAll("path")
-            .data(json.features)
-            .enter()
-            .append("path")
-            .attr("d", path)
-            .attr("class", "states")
+        d3.csv("kill_state.csv").then(function(data) {
+
+            for (var i = 0; i < data.length; i++) {
+                var dataState = data[i].State;
+                var dataValue = data[i].black_victms;
+                for (var j = 0; j < json.features.length; j++)  {
+                    var jsonState = json.features[j].properties.name;            
+                    if (dataState == jsonState) {
+                        dataValue = dataValue.replace('%', ''); 
+                        console.log(dataValue)
+                        json.features[j].properties.victms = dataValue; 
+                        break;
+                    }
+                }
+            }
+
+            svg.selectAll("path")
+                .data(json.features)
+                .enter()
+                .append("path")
+                .attr("d", path)
+                .attr("class", "states")
+                .style("stroke", "black")
+                .style("fill", function(d, i){
+                    var value = d.properties.victms;
+                    console.log(value)
+                    if(value === '0'){
+                        return "rgb(213,222,217)";
+                    }
+                    if (value) {
+                        //If value exists…
+                        return color(value);
+                    } else {
+                        //If value is undefined…
+                        return "rgb(213,222,217)";
+                    }
+                });
+
+            var legend = svg.selectAll(".legend")
+                .data(color.domain())
+              .enter().append("g")
+                .attr("class", "legend")
+                .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+          
+            // draw legend colored rectangles
+            legend.append("rect")
+                .attr("x", width - 18)
+                .attr("width", 18)
+                .attr("height", 18)
+                .style("fill", color);
+          
+            // draw legend text
+            legend.append("text")
+                .attr("x", width - 24)
+                .attr("y", 9)
+                .attr("dy", ".35em")
+                .style("text-anchor", "end")
+                .text(function(d) { return d;})
+        });
     });
-    console.log("HI");
 }
 
 
 
-
+/*
 function move_slider() {
     moving = true;
     timer = setInterval(step, 1000);
@@ -205,7 +257,7 @@ function drawNodes(zips){
         .data(zips)
         .enter()
         .append("circle")
-            .attr("r", 3)
+            .attr("r", 2)
             .attr("transform", 
                 function(d) {
                     return "translate(" + projection([
@@ -293,3 +345,4 @@ var mouseover = function(d) {
       .duration(200)
       .style("opacity", 1)
   }
+  */

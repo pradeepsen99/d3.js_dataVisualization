@@ -1,5 +1,5 @@
 var width = 960,
-height = 800
+height = 600
 
 var formatDateIntoMonth = d3.timeFormat("%B");
 var formatDate = d3.timeFormat("%d %b %Y");
@@ -58,6 +58,7 @@ slider.insert("g", ".track-overlay")
     .attr("x", x)
     .attr("y", 10)
     .attr("text-anchor", "middle")
+    .style("fill", "white")
     .text(function(d) { return formatDateIntoMonth(d); });
 
 var handle = slider.insert("circle", ".track-overlay")
@@ -67,6 +68,7 @@ var handle = slider.insert("circle", ".track-overlay")
 var label = slider.append("text")  
     .attr("class", "label")
     .attr("text-anchor", "middle")
+    .style("fill", "white")
     .text(formatDate(startDate))
     .attr("transform", "translate(0," + (-25) + ")")
     .attr("color", "white")
@@ -82,10 +84,14 @@ var actual_zips = [];
 var zip_tsv;
 var police_brut_data = [];
 
+//Projection vars
+var projection = d3.geoAlbersUsa();
+var path = d3.geoPath().projection(projection);
+
 init();
 var temp = 0
-async function init() {
-    d3.csv("police_brut.csv",function(data) {
+function init() {
+    d3.csv("police_brut.csv").then(function(data) {
         for(var i = 0; i < data.length; i++){
             //To make sure only 2019 results show up from data - Pre-filtered before hand.
             if((data[i].date.includes('/19')===false)){
@@ -97,30 +103,41 @@ async function init() {
             temp++;
             police_brut_data.unshift(data[i]);
         }
-        console.log(data[1].date);
-        d3.tsv("zipcodes.tsv", function(error, zip) {
+
+        d3.tsv("zipcodes.tsv").then(function(zip) {
             zip_tsv = zip;
+            //(zip.length);
         });
+        //console.log(police_brut_data);
+        move_slider();
     });
+    //Old code
+    /*d3.json("us.json").then(function(us) {
+        svg.append("path")
+            .attr("class", "states")
+            .datum(topojson.feature(us, us.objects.states))
+            .attr("d", path);    
+    });*/
+    //New Attempt at map code
+    console.log("HI");
+    d3.json("us-states.json").then(function(json) {
+        console.log("HI");
+        svg.selectAll("path")
+            .data(json.features)
+            .enter()
+            .append("path")
+            .attr("d", path)
+            .attr("class", "states")
+    });
+    console.log("HI");
 }
 
 
-var projection = d3.geoAlbersUsa();
-var path = d3.geoPath()
-    .projection(projection);
 
-d3.json("us.json", function(error, us) {
-    svg.append("path")
-        .attr("class", "states")
-        .datum(topojson.feature(us, us.objects.states))
-        .attr("d", path);    
-});
-move_slider();
+
 function move_slider() {
-
-        moving = true;
-        timer = setInterval(step, 1000);
-    
+    moving = true;
+    timer = setInterval(step, 1000);
     console.log("Slider moving: " + moving);
 }
 
@@ -188,7 +205,7 @@ function drawNodes(zips){
         .data(zips)
         .enter()
         .append("circle")
-            .attr("r", 5)
+            .attr("r", 4)
             .attr("transform", 
                 function(d) {
                     return "translate(" + projection([
@@ -197,8 +214,8 @@ function drawNodes(zips){
                     ]) + ")";
             })
             .attr('fill', function(d, i){
-                if(police_brut_data[i].Race === "Black"){
-                    return "blue";
+                if(police_brut_data[i].Race === "White"){
+                    return "yellow";
                 }
                 return "red";
             })
@@ -224,12 +241,14 @@ function test(){
     var age = "<p style='font-size:15px'> Age: " + police_brut_data[counter].Age + "</p>\n";
     var address = "<p style='font-size:15px'>Address of death: " + police_brut_data[counter].Address + "</p>\n";
     var cause_death = "<p style='font-size:15px'> Cause of death: " + police_brut_data[counter].cause_death + "</p>\n";
+    var race = "<p style='font-size:15px'> Race: " + police_brut_data[counter].Race + "</p>\n";
     var url_img = "<img src='" + police_brut_data[counter].url_image + "'onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));' style='height:200px;width:200px;border:none;overflow:hidden;'/>";
     if(police_brut_data[counter].url_image===""){
         url_img = "<p style='font-size:15px'>**IMG Unavalable**</p>\n";
     }
+    console.log(race)
     tooltip
-      .html(name + age + address + cause_death + url_img);
+      .html(name + age + address + cause_death + race + url_img);
     counter++;
 }
 
@@ -260,12 +279,13 @@ var mouseover = function(d) {
     var age = "<p style='font-size:15px'> Age: " + police_brut_data[i].Age + "</p>\n";
     var address = "<p style='font-size:20px'>Address of death: " + police_brut_data[i].Address + "</p>\n";
     var cause_death = "<p style='font-size:20px'> Cause of death: " + police_brut_data[i].cause_death + "</p>\n";
+    var race = "<p style='font-size:15px'> Race: " + police_brut_data[i].Race + "</p>\n";
     var url_img = "<img src='" + police_brut_data[i].url_image + "'onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));' style='height:200px;width:200px;border:none;overflow:hidden;'/>";
     if(police_brut_data[i].url_image===""){
         url_img = "IMG Unavil";
     }
     tooltip
-      .html(name + age + address + cause_death + url_img);
+      .html(name + age + address + cause_death + race + url_img);
       //.style("x", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
       //.style("y", (d3.mouse(this)[1]) + "px")
   }
