@@ -36,6 +36,20 @@ var path = d3.geoPath().projection(projection);
 var color = d3.scaleLinear().domain([1,50])
   .range(["white", "red"])
 
+var tooltip = d3.select("body").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0)
+  .attr("class", "tooltip")
+  .style("background-color", "black")
+  .style("border", "solid")
+  .style("border-width", "1px")
+  .style("border-radius", "5px")
+  .style("padding", "25px")
+  .style("float","left")
+  .style("position", "absolute")
+  .style("display", "inline-block")
+  .style("margin-left", "70px;")
+
 init();
 var temp = 0
 function init() {
@@ -77,6 +91,7 @@ function init() {
                     if (dataState == jsonState) {
                         dataValue = dataValue.replace('%', ''); 
                         json.features[j].properties.victms = dataValue; 
+                        json.features[i].properties
                         break;
                     }
                 }
@@ -101,7 +116,24 @@ function init() {
                         //If value is undefined…
                         return "rgb(213,222,217)";
                     }
-                });
+                })
+                .on("mouseover", function(d) {
+                    var percent = d.properties.victms + "% Black victms"
+                    if(d.properties.victms==0){
+                        percent = "Data Unavailable"
+                    }
+                    tooltip.transition()
+                         .duration(200)
+                         .style("opacity", .9);
+                    tooltip.html(d.properties.name + "<br/> " + percent)
+                         .style("left", (d3.event.pageX + 5) + "px")
+                         .style("top", (d3.event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(d) {
+                    tooltip.transition()
+                         .duration(500)
+                         .style("opacity", 0);
+                });;
 
             //----------LEGEND CODE---------//
             var color1 = d3.scaleLinear().domain([1,5]).range(["white", "red"])

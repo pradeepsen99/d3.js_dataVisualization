@@ -35,8 +35,7 @@ var svg = d3.select("#vis").append("svg")
 // add the tooltip area to the webpage
 var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
-    .style("opacity", 0)
-    ;
+    .style("opacity", 0);
 
 d3.csv("kill_state.csv").then(function(data) {
     // don't want dots overlapping axis, so add in buffer to data domain
