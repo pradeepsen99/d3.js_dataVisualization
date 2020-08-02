@@ -227,7 +227,7 @@ function drawNodes(zips){
             .on("mouseleave", mouseleave )
 }
 
-var timer1 = setInterval(test, 1000);
+var timer1 = setInterval(test, 3000);
 var counter = 0;
 function test(){
     tooltip

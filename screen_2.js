@@ -1,4 +1,4 @@
-var width = 960,
+var width = 1000,
 height = 600
 
 var formatDateIntoMonth = d3.timeFormat("%B");
@@ -168,5 +168,86 @@ function init() {
                 .style("fill", "white")
                 .text(function(d, i) { return legendText[i]; });
                 });
+
+            //Circle Highlighting - Annotations MIDWEST
+            var svg_new = d3.select("svg").append("g")
+            svg_new.append("circle")
+                .attr("r", 170)
+                .attr("cx", 650)
+                .attr("cy", 300)
+                .attr('fill-opacity', 0.2)
+                .attr("fill", "grey")
+                .style("pointer-events", "none")
+                .style("stroke", "white")
+
+            svg_new.append("line")
+                .attr("stroke", "white")
+                .style("stroke-width", 2)
+                .attr("x1", 820)
+                .attr("y1", 300)
+                .attr("x2", 900)
+                .attr("y2", 350); 
+
+            var text_x = 850;
+            var text_y = 370;
+            var front = "Most of the states follow the trend of being "
+            svg_new.append("text")
+                .attr("x", text_x)
+                .attr("y", text_y)
+                .attr("fill", "white")
+                .text("Most Of the states in the")
+            svg_new.append("text")
+                .attr("x", text_x)
+                .attr("y", text_y)
+                .attr("dy", "1em")
+                .attr("fill", "white")
+                .text("Midwest have double")
+            svg_new.append("text")
+                .attr("x", text_x)
+                .attr("y", text_y)
+                .attr("dy", "2em")
+                .attr("fill", "white")
+                .text("the number deaths to")
+            svg_new.append("text")
+                .attr("x", text_x)
+                .attr("y", text_y)
+                .attr("dy", "3em")
+                .attr("fill", "white")
+                .text("black population")
+
+            //Illinois Highlighting
+            svg_new.append("line")
+                .attr("stroke", "white")
+                .style("stroke-width", 2)
+                .attr("x1", 625)
+                .attr("y1", 250)
+                .attr("x2", 700)
+                .attr("y2", 100); 
+
+            var ill_text_x = 710;
+            var ill_text_y = 100;
+            svg_new.append("text")
+                .attr("x", ill_text_x)
+                .attr("y", ill_text_y)
+                .attr("fill", "white")
+                .html("Illinois is one of the")
+            svg_new.append("text")
+                .attr("x", ill_text_x)
+                .attr("y", ill_text_y)
+                .attr("fill", "white")
+                .attr("dy", "1em")
+                .html("worst states in the US")
+            svg_new.append("text")
+                .attr("x", ill_text_x)
+                .attr("y", ill_text_y)
+                .attr("fill", "white")
+                .attr("dy", "2em")
+                .html("having the highest %")
+            svg_new.append("text")
+                .attr("x", ill_text_x)
+                .attr("y", ill_text_y)
+                .attr("fill", "white")
+                .attr("dy", "3em")
+                .html("of black deaths")
     });
 }
