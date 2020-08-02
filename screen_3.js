@@ -232,12 +232,12 @@ function drawNodes(zips){
             .on("mouseleave", mouseleave )
 }
 
-//var timer1 = setInterval(test, 4000);
+var timer1 = setInterval(test, 1000);
 var counter = 0;
 function test(){
     tooltip
       .style("opacity", 1)
-    var name = "<p style='font-size:20px'>" + police_brut_data[counter].Name + "</p>\n";
+    var name = "<p style='font-size:20px'><u>" + police_brut_data[counter].Name + "</u></p>\n";
     var age = "<p style='font-size:15px'> Age: " + police_brut_data[counter].Age + "</p>\n";
     var address = "<p style='font-size:15px'>Address of death: " + police_brut_data[counter].Address + "</p>\n";
     var cause_death = "<p style='font-size:15px'> Cause of death: " + police_brut_data[counter].cause_death + "</p>\n";
@@ -257,24 +257,27 @@ var tooltip = d3.select("#vis")
     .append("div")
     .style("opacity", 0)
     .attr("class", "tooltip")
-    .style("background-color", "white")
+    .style("background-color", "black")
     .style("border", "solid")
     .style("border-width", "1px")
     .style("border-radius", "5px")
     .style("padding", "25px")
     .style("float","left")
-    .style("position", "absolute")
+    .style("position", "relative")
     .style("display", "inline-block")
     .style("margin-left", "70px;")
+    .style("opacity", 1)
+    
 
+tooltip.html("")
 
 var mouseover = function(d) {
     //console.log("mouseover");
-    tooltip
-      .style("opacity", 1)
-  }
+    tooltip.style("opacity", 1)
+    clearInterval(timer1);
+}
 
-  var mousemove = function(d, i) {
+var mousemove = function(d, i) {
     var name = "<p style='font-size:20px;text-align:center;'>" + police_brut_data[i].Name + "</p>\n";
     var age = "<p style='font-size:15px'> Age: " + police_brut_data[i].Age + "</p>\n";
     var address = "<p style='font-size:20px'>Address of death: " + police_brut_data[i].Address + "</p>\n";
@@ -285,16 +288,17 @@ var mouseover = function(d) {
         url_img = "IMG Unavil";
     }
     tooltip
-      .html(name + age + address + cause_death + race + url_img);
-      //.style("x", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-      //.style("y", (d3.mouse(this)[1]) + "px")
-  }
+        .html(name + age + address + cause_death + race + url_img)
+        //.attr("x", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        //.attr("y", (d3.mouse(this)[1]) + "px")
+}
 
-  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-  var mouseleave = function(d) {
+// A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+var mouseleave = function(d) {
     //console.log("mouseleave");
     tooltip
-      .transition()
-      .duration(200)
-      .style("opacity", 1)
-  }
+        .transition()
+        .duration(200)
+        .style("opacity", 1)
+    timer1 = setInterval(test, 1000);
+}

@@ -11,15 +11,16 @@
 <body style="background-color:rgb(0, 0, 0);">
 
 
-<div class="container-fluid">
+<div class="container-fluid" style="min-height: 100%; height:auto !important; height: 100%;">
   <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <!--Slide 1-->
       <div class="item active">
+        <!--Slide text-->
         <div class="carousel-caption d-none d-md-block">
-          <h4>The red dots are the location of places where people died in the United States. There are </h5>
-          <p>You can hover over each of the dots presented and it will show more information about the victim</p>
+          <h4>The red dots are the location of places where people died in the United States. <br>There are over 1000 people that have been killed.</h5>
+          <p>You can hover over each of the dots presented and it will show more information about the victim <br> There is also a slider on the top which can be used to scrub through the timeline</p>
         </div>
         <div class="embed-responsive embed-responsive-16by9">
           <iframe class="embed-responsive-item" src="screen1.html"></iframe>
@@ -28,15 +29,34 @@
 
       <!--Slide 2-->
       <div class="item">
+        <script>
+          var overiFrame = false;
+          $('#myCarousel iframe').hover( function() {
+              overiFrame = true;
+          }, function() {
+              overiFrame = false;
+          });
+          $(window).blur( function() {
+              if(overiFrame){
+                  $('#myCarousel').carousel('pause');
+              }
+
+          });
+        </script>
+        <!--Slide text-->
+        <div class="carousel-caption d-none d-md-block">
+          <h4>The dots are the location of places where people died in the United States. <br> The Yellow dots are those who are white and the red dots are those who are not white. </h5>
+          <p>You can hover over each of the dots presented and it will show more information about the victim <br> There is also a slider on the top which can be used to scrub through the timeline</p>
+        </div>
         <div class="embed-responsive embed-responsive-16by9">
-          <iframe class="embed-responsive-item" src="screen2.html"></iframe>
+          <iframe class="embed-responsive-item" src="screen3.html"></iframe>
         </div>
       </div>
     
       <!--Slide 3-->
       <div class="item">
         <div class="embed-responsive embed-responsive-16by9">
-          <iframe class="embed-responsive-item" src="screen3.html"></iframe>
+          <iframe class="embed-responsive-item" src="screen2.html"></iframe>
         </div>
       </div>
 
