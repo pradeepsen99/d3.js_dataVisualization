@@ -100,8 +100,18 @@ function init() {
             if((data[i].date.includes('/19/')===true) && temp > 50){
                 continue;
             }
-            temp++;
-            police_brut_data.unshift(data[i]);
+            if(((data[i].Race.includes('White'))===true)){
+                temp++;
+                police_brut_data.unshift(data[i]);
+                continue;
+            }
+            if((data[i].Race.includes('Black'))===true){
+                temp++;
+                police_brut_data.unshift(data[i]);
+                continue;
+            }
+            //temp++;
+            //police_brut_data.unshift(data[i]);
         }
 
         d3.tsv("zipcodes.tsv").then(function(zip) {
@@ -129,7 +139,43 @@ function init() {
             .attr("d", path)
             .attr("class", "states")
     });
-    console.log("HI");
+    console.log("HI")
+
+    //----------LEGEND CODE---------//
+    var color1 = d3.scaleLinear().domain([1,2]).range(["red", "yellow"])
+    var legendText = ["Black", "White"];
+    var legend = svg.append("g")
+            .attr("id", "legend");
+
+    var legenditem = legend.selectAll(".legenditem")
+        .data(d3.range(2))
+        .enter()
+        .append("g")
+            .attr("class", "legenditem")
+            .attr("transform", function(d, i) { return "translate(" + i * 41 + ",65)"; })
+
+
+
+    legenditem.append("rect")
+        .attr("x", width - 280)
+        .attr("y", -7)
+        .attr("width", 40)
+        .attr("height", 6)
+        .attr("class", "rect")
+        .style("fill", 
+            function(d, i) {
+                console.log(color1(i+1)); 
+                return color1(i+1);
+            });
+
+    legenditem.append("text")
+        .attr("x", width - 275)
+        .attr("y", -10)
+        .style("text-anchor", "right")
+        .style("font-size", "13px")
+        .style("font-weight","400")
+        .style("fill", "white")
+        .text(function(d, i) { return legendText[i]; });
 }
 
 
@@ -217,7 +263,10 @@ function drawNodes(zips){
                 if(police_brut_data[i].Race === "White"){
                     return "yellow";
                 }
-                return "red";
+                if(police_brut_data[i].Race === "Black"){
+                    return "red";
+                }
+                return "black";
             })
             .attr('opacity', function(d){
                 //Added this for the one null element that pops up!

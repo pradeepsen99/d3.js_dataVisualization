@@ -91,7 +91,7 @@ function init() {
                     if (dataState == jsonState) {
                         dataValue = dataValue.replace('%', ''); 
                         json.features[j].properties.victms = dataValue; 
-                        json.features[i].properties
+                        json.features[i].properties.percent = data[i].afro_american_percent;
                         break;
                     }
                 }
@@ -118,14 +118,14 @@ function init() {
                     }
                 })
                 .on("mouseover", function(d) {
-                    var percent = d.properties.victms + "% Black victms"
+                    var percent = d.properties.victms + "% Black victms" + "<br/>" + d.properties.percent + " Black Population"
                     if(d.properties.victms==0){
                         percent = "Data Unavailable"
                     }
                     tooltip.transition()
                          .duration(200)
                          .style("opacity", .9);
-                    tooltip.html(d.properties.name + "<br/> " + percent)
+                    tooltip.html("<p style='font-size:20px'><u>"+d.properties.name + "</u></p><br/> " + percent)
                          .style("left", (d3.event.pageX + 5) + "px")
                          .style("top", (d3.event.pageY - 28) + "px");
                 })
@@ -137,7 +137,7 @@ function init() {
 
             //----------LEGEND CODE---------//
             var color1 = d3.scaleLinear().domain([1,5]).range(["white", "red"])
-            var legendText = ["10%", "20%", "30%", "40%", "50%"];
+            var legendText = ["10%", "20%", "30%", "40%", "50%+"];
             var legend = svg.append("g")
                     .attr("id", "legend");
 

@@ -1,6 +1,6 @@
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom,
+    width = 1000 - margin.left - margin.right,
+    height = 550 - margin.top - margin.bottom,
     height1 = height-2;
 
 
@@ -80,6 +80,25 @@ d3.csv("kill_state.csv").then(function(data) {
             .style('fill', 'white')
             .style('font-size', '20px');
     
+        svg.append("circle")
+            .attr("r", 200)
+            .attr("cx", 250)
+            .attr("cy", 190)
+            .attr('fill-opacity', 0.2)
+    
+        svg.append("line")
+            .attr("stroke", "grey")
+            .style("stroke-width", 3)
+            .attr("x1", 440)
+            .attr("y1", 250)
+            .attr("x2", 500)
+            .attr("y2", 350); 
+    
+        svg.append("text")
+            .attr("x", 500)
+            .attr("y", 350)
+            .html("Most of the states follow the trend of being "+ "<br/>" +"almost double the deaths to population")
+
     // draw dots
     svg.selectAll(".dot")
         .data(filtered_data)
@@ -103,4 +122,8 @@ d3.csv("kill_state.csv").then(function(data) {
                  .duration(500)
                  .style("opacity", 0);
         });
+
+    
+
+        
 });
