@@ -15,6 +15,9 @@
   <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
+      <script>
+        window.frames[1].stop()
+      </script>
       <!--Slide 1-->
       <div class="item active">
         <!--Slide text-->
@@ -29,20 +32,6 @@
 
       <!--Slide 2-->
       <div class="item">
-        <script>
-          var overiFrame = false;
-          $('#myCarousel iframe').hover( function() {
-              overiFrame = true;
-          }, function() {
-              overiFrame = false;
-          });
-          $(window).blur( function() {
-              if(overiFrame){
-                  $('#myCarousel').carousel('pause');
-              }
-
-          });
-        </script>
         <!--Slide text-->
         <div class="carousel-caption d-none d-md-block">
           <h4>The dots are the location of places where people died in the United States. <br> The Yellow dots are those who are white and the red dots are those who are not white. </h5>
